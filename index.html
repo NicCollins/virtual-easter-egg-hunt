@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Easter Egg Hunt</title>
+
+  <link rel="stylesheet" href="node_modules/photo-sphere-viewer/dist/photo-sphere-viewer.css">
+  <link rel="stylesheet" href="css/egghunt.css">
+  <script src="js/easter.js"></script>
+</head>
+<body>
+
+<div id="startup">
+    <div id="instructions">
+        <div id="welcome" class="flexbox">
+            <div class="img"><img src="images/church.jpg"></div>
+            <div class="content">
+                <p>Welcome to the Mt. Tabor Baptist Church Virtual Easter Egg Hunt.</p>
+                <p>Through this webpage you will be able to search for eggs around the church.</p>
+            </div>
+        </div>
+        <div id="egg-click" class="flexbox">
+            <div class="content">
+                <p>Search for eggs by clicking and dragging to search around the space. You can also zoom using the scroll wheel on a mouse or the icon in the lower left.
+                    When you find an egg double click on it to add it to your basket. The egg will also be marked so you know which ones you have found.</p>
+            </div>
+            <div class="img"><img src="images/egg1.png"></div>
+        </div>
+        <div id="basket-instructions" class="flexbox">
+            <div class="img"><img src="images/basket.png"></div>
+            <div class="content">
+                <p>Click on the Basket icon to see how many eggs you have found so far.</p>
+                <p>There are 85 Eggs, a Prize Egg, and an Easter Bunny between both locations.</p>
+            </div>
+        </div>
+        <div id="map-instructions" class="flexbox">
+            <div class="content">
+                <p>Click on the location icon to change between the courtyard and the picnic area.</p>
+            </div>
+            <div class="img"><img src="images/location-162102_1280.png"></div>
+        </div>
+        <div id="reset-instructions" class="flexbox">
+            <div class="img"><img src="images/reset.png"></div>
+            <div class="content">
+                <p>Click on the reset icon to reset the Egg Hunt. You can also reset by refreshing the page.</p>
+            </div>
+        </div>
+        <span id="ok" onclick="closeInstructions();">OK</span>
+    </div>
+</div>
+
+<div id="egg-modal">
+    <div id="egg-content">
+        <img id="egg-img" src="images/egg1.png">
+        <div id="egg-msg"></div>
+    </div>
+</div>
+
+<div id="basket-modal">
+    <div id="basket-content">
+        <img id="basket-img" src="images/basket.png">
+        <div id="basket-msg"></div>
+    </div>
+</div>
+
+<div id="bunny-modal">
+    <div id="bunny-content">
+        <img id="bunny-img" src="images/bunny.png">
+        <div id="bunny-msg"></div>
+    </div>
+</div>
+
+<div id="movement-modal">
+    <div id="movement-content">
+        <img id="movement-img" src="images/map.jpg">
+    </div>
+</div>
+
+<div id="viewer"></div>
+<div class="controls">
+    <div id="info" class="control" onclick="openInfo();">
+        <img src="images/info.png">
+    </div>
+    <div id="basket" class="control" onclick="checkBasket();">
+        <img src="images/basket.png">
+    </div>
+    <div id="map" class="control" onclick="loadMap();">
+        <img src="images/location-162102_1280.png">
+    </div>
+    <div id="reset" class="control" onclick="resetHunt();">
+        <img src="images/reset.png">
+    </div>
+</div>
+
+<script src="node_modules/photo-sphere-viewer/node_modules/three/build/three.js"></script>
+<script src="node_modules/photo-sphere-viewer/node_modules/uevent/uevent.js"></script>
+<script src="node_modules/photo-sphere-viewer/node_modules/dot/doT.js"></script>
+<script src="node_modules/photo-sphere-viewer/dist/photo-sphere-viewer.js"></script>
+
+<script>
+    window.onclick = function(event) {
+        var eggModal = document.getElementById('egg-modal');
+        var basketModal = document.getElementById('basket-modal');
+        var bunnyModal = document.getElementById('bunny-modal');
+
+        if (event.target == eggModal) {
+            eggModal.style.display = "none";
+        }
+
+        if (event.target == basketModal) {
+            basketModal.style.display = "none";
+        }
+
+        if (event.target == bunnyModal) {
+            bunnyModal.style.display = "none";
+        }
+    } 
+
+    //[Latitude, Longitude, Prize, Found]
+    var locations = {
+        courtyard: {
+            panorama: 'images/courtyard.jpg',
+            eggs: [
+                [-0.12587820712970976, 5.510338553759633, 0, 0],
+                [-0.028580325945409157, 5.445477327995103, 0, 0],
+                [0.053453344915963985, 5.5273236466781634, 0, 0],
+                [-0.26486446083318516, 5.881107170695541, 0, 0],
+                [0.007088363198832104, 5.822068560570339, 0, 0],
+                [-0.12362573067266247, 0.5002947765628827, 0, 0],
+                [-0.15758379816854595, 0.7082625359322156, 0, 0],
+                [-0.19612747796709296, 0.9357689626661057, 0, 0],
+                [-0.10673168638709907, 0.9813403942572025, 0, 0],
+                [0.18049113609768863, 0.6241884176319561, 0, 0],
+                [-0.26182190074346257, 1.708113508684475, 0, 0],
+                [-0.00990048217936268, 1.255687558112486, 0, 0],
+                [0.003151197681160678, 1.7946782797642777, 0, 0],
+                [0.0006842675108704732, 1.8528934417079546, 0, 0],
+                [0.0019149605239676681, 1.9130465921823963, 0, 0],
+                [-0.08000082431753608, 2.1051646029486593, 0, 0],
+                [-0.037304115859678744, 2.303817525572415, 0, 0],
+                [-0.1329196581618144, 2.402603559305409, 0, 0],
+                [0.030690120803913423, 2.472195575623636, 0, 0],
+                [0.026562725544952093, 2.5334150720432556, 0, 0],
+                [0.0309926181273521, 2.6391397233846625, 0, 0],
+                [-0.046369621127267946, 2.817274695200563, 0, 0],
+                [0.03487439811564985, 2.900717893121234, 0, 0],
+                [-0.055852558365614424, 3.0923236235404623, 0, 0],
+                [0.02392442831754593, 3.282093285664904, 0, 0],
+                [0.14126043471328198, 3.0667715879123856, 0, 0],
+                [-0.2363149200416046, 2.828926247599051, 0, 0],
+                [-0.13787388565938086, 3.432960498521417, 0, 0],
+                [0.14424343989477673, 3.2986596125985392, 0, 0],
+                [-0.04421775802354411, 3.6218668891989374, 0, 0],
+                [-0.05674045790936, 3.7511128216723932, 0, 0],
+                [-0.13348367978074704, 3.907857753155949, 0, 0],
+                [0.15779429417682422, 3.5794394247720582, 0, 0],
+                [0.15657062145997713, 3.8048346875617414, 0, 0],
+                [0.15802664084413487, 4.024806640158031, 0, 0],
+                [-0.24139333011231345, 4.765307155460556, 0, 0],
+                [0.0210990131990898, 4.603980942555667, 0, 0],
+                [0.017278581575532304, 4.817547900494263, 0, 0],
+                [-0.06440334229671185, 5.232416375269003, 0, 0],
+                [0.06081618845026404, 5.016456199312645, 0, 0],
+                [0.060677565427071256, 5.096370361246355, 0, 0]
+            ],
+            bunny: [0.002650113590853209, 6.123373799034258, 0]
+        },
+        picnic: {
+            panorama: 'images/picnic.jpg',
+            eggs: [
+                [-0.5411422879785617, 5.040059193272677, 0, 0],
+                [-0.19165482472353412, 5.567485509988917, 0, 0],
+                [-0.06573531664068066, 5.455813268801782, 0, 0],
+                [-0.08358934776027893, 5.809494124320525, 0, 0],
+                [-0.05399251511869396, 5.638968077540507, 0, 0],
+                [0.07048213997071184, 5.685768186025715, 0, 0],
+                [0.04156032390537545, 6.000768238545599, 0, 0],
+                [-0.10469867613581085, 6.118762157112135, 0, 0],
+                [-0.1717955191191325, 0.020607305042791072, 0, 0],
+                [-0.021441342140108954, 6.151532082439069, 0, 0],
+                [-0.047674752608594106, 6.251125316417274, 0, 0],
+                [-0.4744939796605081, 0.5627577401398512, 0, 0],
+                [-0.06853719427313676, 0.3476218424980075, 0, 0],
+                [-0.1050318269585575, 0.5529838309183756, 0, 0],
+                [-0.15663469350275383, 0.6776098748904489, 0, 0],
+                [0.03584709267298414, 0.6884365712911235, 0, 0],
+                [-0.09977749161983973, 0.7541655686243206, 0, 0],
+                [-0.4476310538786432, 1.3830532679657421, 0, 0],
+                [-0.25303532489773106, 1.6919329076631882, 0, 0],
+                [-0.19691028984591763, 2.4177348258025617, 0, 0],
+                [-0.16130398020856673, 2.6200501509682685, 0, 0],
+                [-0.37537191031755546, 3.736940949367136, 0, 0],
+                [-0.026101115761922422, 3.5201780110512595, 0, 0],
+                [-0.020531818031823912, 3.9212559311120625, 0, 0],
+                [0.056124944570006496, 4.0024045849525525, 0, 0],
+                [0.027182716099094062, 4.095525191308809, 0, 0],
+                [0.1519249312329718, 3.9623725588830845, 0, 0],
+                [0.15118720974441535, 4.0500714068808445, 0, 0],
+                [0.09114820850172523, 4.130409049038478, 0, 0],
+                [0.08620432113053123, 4.261236936955381, 0, 0],
+                [0.11501585372680734, 4.410065221473756, 0, 0],
+                [0.08562507149978238, 4.374072026948142, 0, 0],
+                [0.03592550180139864, 4.368172779101593, 0, 0],
+                [-0.022384114583455572, 4.344240756772975, 0, 0],
+                [0.14819023649584695, 4.290246149977179, 0, 0],
+                [0.14641621750908995, 4.36194811029972, 0, 0],
+                [0.119532890756749, 4.5047857711909955, 0, 0],
+                [0.08183195771924812, 4.549717977804044, 0, 0],
+                [0.0136582909396743, 4.60096586764801, 0, 0],
+                [0.01093594445863233, 4.8074691903791456, 0, 0],
+                [0.051524135882718536, 4.729013827172849, 0, 0],
+                [-0.01847086614434379, 5.1701022377369465, 0, 0],
+                [0.07271721698678113, 5.134557765017307, 0, 0],
+                [0.07289788126624908, 5.2044843541363415, 0, 0],
+                [0.18155337606015776, 5.175407504876366, 1, 0]
+            ]
+        }
+    };
+
+    var current_loc = locations.courtyard;
+    var next_loc = 'picnic';
+
+    var basket = {
+        eggs: 0,
+        prize: false,
+        bunny: false
+    };
+
+    var markerSize = 20;
+
+    if(screen.width < 768) {
+        markerSize = 10;
+    }
+
+    function checkBasket() {
+        var msg = "You have found " + basket.eggs + " Egg";
+        
+        if (basket.eggs > 1) {
+            msg = msg + "s";
+        }
+
+        if(basket.prize) {
+            msg = msg + "\nYou have found the Prize Egg";
+        } else {
+            msg = msg + "\nYou have not found the Prize Egg";
+        }
+
+        if(basket.bunny) {
+            msg = msg + "\nYou have found the Easter Bunny"
+        }
+
+        basketModal(msg);
+    }
+
+    function loadMap() {
+        current_loc = locations[next_loc];
+
+        openMovement(next_loc);
+
+        viewer.setPanorama(current_loc.panorama);
+        markers.clearMarkers();
+
+        current_loc.eggs.forEach(function (egg, index) {
+            if(egg[3] == 1) {
+                markers.addMarker({
+                        id: `egg=${index}`,
+                        circle: markerSize,
+                        latitude: egg[0],
+                        longitude: egg[1],
+                        svgStyle: {
+                            opacity: '0.5',
+                            stroke     : 'blue',
+                            strokeWidth: '3px',
+                            fill: 'light-blue'
+                        }
+                    });
+            }
+        });
+
+        if(current_loc.hasOwnProperty('bunny') && current_loc.bunny[2] == 1) {
+            markers.addMarker({
+                id: `bunny`,
+                circle: markerSize + 10,
+                latitude: current_loc.bunny[0],
+                longitude: current_loc.bunny[1],
+                svgStyle: {
+                    opacity: '0.5',
+                    stroke     : 'blue',
+                    strokeWidth: '3px',
+                    fill: 'light-blue'
+                }
+            });
+        }
+
+        if(next_loc == 'picnic') {
+            next_loc = 'courtyard';
+        } else {
+            next_loc = 'picnic'
+        }
+    }
+
+    function resetHunt() {
+        markers.clearMarkers();
+        basket.eggs = 0;
+        basket.prize = false;
+        basket.bunny = false;
+
+        var locs = Object.values(locations);
+        for (loc of locs) {
+            loc.eggs.forEach(function (egg, index) {
+                egg[3] = 0;
+            });
+        }
+    }
+
+    function registerClick(data, markers) {
+        console.log("Double Click");
+        console.log(`Lat: ${data.latitude}`);
+        console.log(`Long: ${data.longitude}`);
+
+        current_loc.eggs.forEach(function (egg, index) {
+            var latDiff = Math.abs(egg[0] - data.latitude);
+            var longDiff = Math.abs(egg[1] - data.longitude);
+
+            if((latDiff < 0.02) && (longDiff < 0.015)) {
+                if(egg[3] == 1) {
+                    eggModal("Egg already found.");
+                } else {
+                    if(egg[2] == 1) {
+                        eggModal("You found the Prize Egg");
+                        basket.prize = true;
+                    } else {
+                        eggModal("You found an Egg!");
+                    }
+
+                    egg[3] = 1;
+                    basket.eggs = basket.eggs + 1;
+
+                    markers.addMarker({
+                        id: `egg=${index}`,
+                        circle: markerSize,
+                        latitude: egg[0],
+                        longitude: egg[1],
+                        svgStyle: {
+                            opacity: '0.5',
+                            stroke     : 'blue',
+                            strokeWidth: '3px',
+                            fill: 'light-blue'
+                        }
+                    });
+                }
+            }
+        });
+
+        if(current_loc.hasOwnProperty('bunny')) {
+            var latDiff = Math.abs(current_loc.bunny[0] - data.latitude);
+            var longDiff = Math.abs(current_loc.bunny[1] - data.longitude);
+
+            if((latDiff < 0.03) && (longDiff < 0.03)) {
+                current_loc.bunny[2] = 1;
+                basket.bunny = true;
+
+                bunnyModal("You Found ME!");
+
+                markers.addMarker({
+                    id: `bunny`,
+                    circle: markerSize + 10,
+                    latitude: current_loc.bunny[0],
+                    longitude: current_loc.bunny[1],
+                    svgStyle: {
+                        opacity: '0.5',
+                        stroke     : 'blue',
+                        strokeWidth: '3px',
+                        fill: 'light-blue'
+                    }
+                });
+            }
+        }
+    }
+
+    var viewer;
+    var markers;
+
+    var viewerEl = document.getElementById('viewer');
+
+    function openInfo() {
+        var modal = document.getElementById("startup");
+
+        modal.style.display = "block";
+
+        viewerEl.style.visibility = "hidden";
+    }
+
+    function closeInstructions() {
+        var modal = document.getElementById("startup");
+
+        modal.style.display = "none";
+
+        viewerEl.style.visibility = "visible";
+    }
+
+    viewer = new PhotoSphereViewer({
+        container: 'viewer',
+        panorama: current_loc.panorama,
+        pano_data: {
+            full_width: 14440,
+            full_height: 7220,
+            cropped_width: 14440,
+            cropped_height: 2946,
+            cropped_x: 0,
+            cropped_y: 2137
+        },
+        min_fov: 5,
+        max_fov: 70,
+        time_anim: false,
+        plugins: [PhotoSphereViewer.MarkersPlugin],
+        navbar: [
+            'autorotate',
+            'zoom',
+            'download'
+        ]
+    });
+
+    markers = viewer.hud;
+
+    viewer.on('dblclick', function(data){
+        registerClick(data, markers);
+    });
+
+    viewer.on('click', function(data){
+        closeModal(data);
+    });
+
+    viewer.on('panorama-loaded', function() {
+        closeMovement();
+    });
+
+    function openMovement(mov_loc) {
+        var movementModal = document.getElementById('movement-modal');
+        var movementImg = document.getElementById('movement-img');
+
+        movementImg.src = "images/map-" + mov_loc + ".jpg";
+        movementModal.style.display = "block";
+        viewerEl.style.visibility = "hidden";
+    }
+
+    function closeMovement() {
+        var movementModal = document.getElementById('movement-modal');
+        var modal = document.getElementById("startup");
+
+        movementModal.style.display = "none";
+
+        if(modal.style.display == "none") {
+            viewerEl.style.visibility = "visible";
+        }
+    }
+
+    function closeModal(data) {
+        var eggModal = document.getElementById('egg-modal');
+        var basketModal = document.getElementById('basket-modal');
+        var bunnyModal = document.getElementById('bunny-modal');
+
+        eggModal.style.display = "none";
+        basketModal.style.display = "none";
+        bunnyModal.style.display = "none";
+    }
+
+    function getRandomInt(max) {
+        return (Math.floor(Math.random() * Math.floor(max))) + 1;
+    }
+
+    function eggModal(msg) {
+        var eggModal = document.getElementById('egg-modal');
+        var eggMsg = document.getElementById('egg-msg');
+        var eggImg = document.getElementById('egg-img');
+
+        eggPath = "images/egg" + getRandomInt(12) + ".png";
+
+        eggMsg.innerText = msg;
+        eggImg.src = eggPath;
+
+        eggModal.style.display = "block";
+    }
+
+    function basketModal(msg) {
+        var basketModal = document.getElementById('basket-modal');
+        var basketMsg = document.getElementById('basket-msg');
+
+        basketMsg.innerText = msg;
+
+        basketModal.style.display = "block";
+    }
+
+    function bunnyModal(msg) {
+        var bunnyModal = document.getElementById('bunny-modal');
+        var bunnyMsg = document.getElementById('bunny-msg');
+
+        bunnyMsg.innerText = msg;
+
+        bunnyModal.style.display = "block";
+    }
+  </script>
+</body>
+</html>

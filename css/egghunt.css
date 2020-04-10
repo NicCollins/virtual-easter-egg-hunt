@@ -1,0 +1,307 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+}
+
+#viewer {
+    width: 100%;
+    height: 85%;
+    visibility: hidden;
+}
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    height: 10%;
+    justify-content: center;
+}
+
+.control {
+    border: 5px;
+    border-style: solid;
+    border-color: gray;
+    height: 100%;
+    width: 10%;
+    text-align: center;
+    cursor: pointer;
+}
+
+img {
+    height: 100%;
+}
+ 
+ /* The Modal (background) */
+ #startup {
+    display: block; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    /*overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+#instructions {
+    background-color: #fefefe;
+    margin: 2% auto; /* 15% from the top and centered */
+    margin-bottom: 0%;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-image: url(../images/grass-background.jpg);
+    overflow-y: auto;
+}
+
+/* The Close Button */
+#ok {
+    width: 20%;
+    color: black;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    border: 4px solid blue;
+    background-color: lightgrey;
+    text-align: center;
+}
+
+#ok:hover,
+#ok:focus {
+    color: grey;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: lightblue;
+} 
+
+.flexbox {
+    height: 18%;
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.img {
+    width: 20%;
+    height: 80%;
+    text-align: center;
+}
+
+.content {
+    width: 80%;
+    font-size: 20px;
+    background-color: rgba(255,255,255,0.5);
+    text-align: center;
+}
+
+.img img {
+    height: 100%;
+}
+
+#egg-modal {
+    display: none;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#egg-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 20%;
+    margin: auto;
+    background-color: lightblue;
+    width: 25%;
+}
+
+#egg-msg {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#basket-modal {
+    display: none;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#basket-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 25%;
+    margin: auto;
+    background-color: lightblue;
+    width: 50%;
+}
+
+#basket-msg {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#bunny-modal {
+    display: none;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#bunny-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 20%;
+    margin: auto;
+    background-color: lightblue;
+    width: 35%;
+}
+
+#bunny-img {
+    margin-right: 5%;
+}
+
+#bunny-msg {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+#movement-modal {
+    display: none;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#movement-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+    margin-top: 10%;
+    margin: auto;
+    background-color: lightblue;
+    width: 50%;
+}
+
+@media only screen
+    and (orientation: portrait) {
+        .control {
+            width: 25%;
+        }
+
+        #egg-content {
+            width: 100%;   
+        }
+
+        #basket-content {
+            width: 100%;
+            height: 30%;
+        }
+
+        #basket-msg {
+            font-size: 20px;
+        }
+
+        #basket-img {
+            height: 70%;
+            width: auto;
+        }
+
+        #bunny-content {
+            width: 100%;
+        }
+
+        #movement-content {
+            width: 100%;
+        }
+}
+
+@media screen and (max-height: 767px), (orientation: portrait) {
+    #instructions {
+        justify-content: flex-start;
+    }
+
+    .flexbox {
+        height: auto;
+        margin: 5px;
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    #egg-click {
+        flex-direction: column-reverse;
+    }
+
+    #map-instructions {
+        flex-direction: column-reverse;
+    }
+    
+    .img {
+        width: 75px;
+        height: 75px;
+        text-align: center;
+    }
+    
+    .content {
+        width: 90%;
+        font-size: 16px;
+        background-color: rgba(255,255,255,0.5);
+        text-align: center;
+    }
+}
+
+@media only screen and (max-width: 1000px) and (orientation: landscape) {
+    #basket-content {
+        width: 85%;
+        height: 35%;
+    }
+}
