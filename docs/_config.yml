@@ -17,7 +17,7 @@ title: Egg Hunt Guide
 email: collins.nicolas@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   How To guide for building a virtual easter egg hunt.
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "/virtual-easter-egg-hunt" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  NicCollins
 
